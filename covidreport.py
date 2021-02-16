@@ -4,7 +4,7 @@ import datapane as dp
 from datetime import date
 
 # Sign-in with your unique token
-dp.login(token="d1d4a8b6e2d8028d61823572ab650fc6cdd48256")
+dp.login(token="xxxxxxxxxxxxx")
 
 dataset = pd.read_csv('https://covid.ourworldindata.org/data/owid-covid-data.csv')
 #locations = dataset[['location', 'iso_code']].sample(5)  # Replace with you own locations to customize!

@@ -1,0 +1,29 @@
+import altair as alt
+import pandas as pd
+import datapane as dp
+from datetime import date
+
+# Sign-in with your unique token
+dp.login(token="d1d4a8b6e2d8028d61823572ab650fc6cdd48256")
+
+dataset = pd.read_csv('https://covid.ourworldindata.org/data/owid-covid-data.csv')
+#locations = dataset[['location', 'iso_code']].sample(5)  # Replace with you own locations to customize!
+countries = ['South Africa','Netherlands']
+df = dataset[dataset.location.isin(countries)]
+
+plot = alt.Chart(df).mark_area(opacity=0.4, stroke='black').encode(
+    x='date:T', y=alt.Y('new_cases_smoothed_per_million:Q', stack=None),
+    color=alt.Color('location:N', scale=alt.Scale(scheme='set1')), tooltip='location:N'
+).interactive().properties(width='container')
+
+# Create report
+r = dp.Report(
+    f'### Comparing COVID cases in {", ".join(countries)}',
+    f'_Built using data from [Our World in Data](https://ourworldindata.org/) on {date.today()}_',
+    dp.Plot(plot),
+    dp.DataTable(df),
+)
+
+# Publish
+r.publish(name=f'COVID-19 in {" ".join(countries)}', open=True,
+          description=f'COVID-19 in {", ".join(countries)}')
